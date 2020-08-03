@@ -16,6 +16,9 @@ public class OnlineMapsProvider
     private const string SATELLITE = "Satellite";
     private const string RELIEF = "Relief";
     private const string TERRAIN = "Terrain";
+
+
+
     private const string MAP = "Map";
 
     private static OnlineMapsProvider[] providers;

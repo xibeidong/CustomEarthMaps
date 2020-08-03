@@ -179,6 +179,7 @@ public static class OnlineMapsTileManager
 
         if (map.source != OnlineMapsSource.Online)
         {
+           // Debug.Log(tile.resourcesPath);//"OnlineMapsTiles/9/429/202"
             ResourceRequest resourceRequest = Resources.LoadAsync(tile.resourcesPath);
             yield return resourceRequest;
             Object tileTexture = resourceRequest.asset;
@@ -209,6 +210,7 @@ public static class OnlineMapsTileManager
 
         if (loadOnline)
         {
+           // Debug.Log(tile.url);
             if (tile.www != null)
             {
                 Debug.Log("tile has www " + tile + "   " + tile.status);

@@ -20,11 +20,12 @@ public class UIstart : MonoBehaviour
     private InputField input_start_time = null;
     private InputField input_end_time = null;
     private CanvasGroup canvasGroup = null;
+    private Dropdown map_choose = null;
     void Start()
     {
-      
         //隐藏 panel_playback
-        GameObject g = GameObject.Find("Panel_playback");
+        // GameObject g = GameObject.Find("Panel_playback");
+        GameObject g = InitalPrefabs("Prefabs/Panel_playback");
         if (g!=null)
         {
             canvasGroup = g.transform.GetComponent<CanvasGroup>();
@@ -36,7 +37,15 @@ public class UIstart : MonoBehaviour
         {
             Debug.Log("Panel_playback 物体获取失败");
         }
+
+        GameObject mainMenu = InitalPrefabs("Prefabs/MainMenu");
        
+        map_choose = GameObject.Find("Dropdown_MapChoose").GetComponent<Dropdown>();
+        map_choose.onValueChanged.AddListener(mapChooseValueChange);
+
+        int v = PlayerPrefs.GetInt("mapType");
+        map_choose.value = v;
+        loadMapWay(v);
 
         btn_full = GameObject.Find("btn_full").GetComponent<Button>();
         btn_full.onClick.AddListener(OnClickFull);
@@ -63,7 +72,49 @@ public class UIstart : MonoBehaviour
         input_end_time.text = System.DateTime.Now.ToString();
     }
 
-  
+    private GameObject InitalPrefabs(string path)
+    {
+        GameObject prefab = Resources.Load(path) as GameObject;
+        GameObject g = GameObject.Instantiate<GameObject>(prefab);
+        g.transform.parent = transform;
+        g.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+        return g;
+    }
+
+    private void mapChooseValueChange(int v)
+    {
+        //Debug.Log("DropDown value = " + v);
+        //string str = map_choose.options[v].text;
+        //Debug.Log(str);
+        loadMapWay(v);
+        PlayerPrefs.SetInt("mapType", v);
+    }
+
+    private void loadMapWay(int v)
+    {
+        GameObject g = GameObject.Find("start");
+        if (g == null)
+        {
+            Debug.Log("loadMapWay: 没有找到名称start的物体");
+            return;
+        }
+        if (v==0) //离线地图(自定义地图服务器)
+        {
+           CreateCustomMapStyle cm =  g.GetComponent<CreateCustomMapStyle>();
+            if (cm==null)
+            {
+                g.AddComponent<CreateCustomMapStyle>();
+            }
+        }
+        else if (v==1)
+        {
+            CreateCustomMapStyle cm = g.GetComponent<CreateCustomMapStyle>();
+            if (cm != null)
+            {
+                Destroy(cm);
+            }
+        }
+    }
     private void OnClickFull()
     {
         //Debug.Log("点击了关闭按钮");

@@ -110,6 +110,7 @@ public class OnlineMapsRasterTile : OnlineMapsTile
                 if (mapType.isCustom) _url = Regex.Replace(map.customProviderURL, @"{\w+}", CustomProviderReplaceToken);
                 else _url = mapType.GetURL(this);
             }
+            Debug.Log("============>>"+ _url);
             return _url;
         }
     }

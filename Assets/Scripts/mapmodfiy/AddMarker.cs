@@ -38,7 +38,8 @@ public class AddMarker : MonoBehaviour
         double lng, lat;
         marker.GetPosition(out lng,out lat);
        // Debug.Log($"{lng},{lat}");
-       
+
+        
     }
 
     private void Update()

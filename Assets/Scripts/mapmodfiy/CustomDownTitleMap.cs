@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,7 +12,7 @@ public class CustomDownTitleMap : MonoBehaviour
     private void Start()
     {
         map = OnlineMaps.instance;
-
+        
         // Subscribe to the tile download event.
         OnlineMapsTileManager.OnStartDownloadTile += OnStartDownloadTile;
        
@@ -22,6 +23,12 @@ public class CustomDownTitleMap : MonoBehaviour
         // 参考 =>  OnlineMapsTileManager.StartDownloadTile()
         // 参考 => OnlineMapsRasterTile.LoadTileFromWWW()
         StartCoroutine(HttpGetTile(tile));
+       
+    }
+    private void OnDestroy()
+    {
+        OnlineMapsTileManager.OnStartDownloadTile -= OnStartDownloadTile;
+        StopCoroutine("HttpGetTile");
     }
 
     IEnumerator HttpGetTile(OnlineMapsTile tile)
