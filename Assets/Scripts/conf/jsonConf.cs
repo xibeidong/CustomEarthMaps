@@ -47,5 +47,6 @@ public class ConfigFile
 {
     public string MysqlConf;
     public string UdpServer;
+    public string TcpClientConf;
     public string MapHttpServer;
 }

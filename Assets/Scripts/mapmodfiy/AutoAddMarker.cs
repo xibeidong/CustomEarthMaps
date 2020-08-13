@@ -29,13 +29,13 @@ public class AutoAddMarker : MonoBehaviour
     private float t = 0;
     void Update()
     {
-        if (GPSInfosManager.Insatance.markerList.Count>0)
+        if (GPSInfosManager.Insatance.needUpdateMarkerList.Count>0)
         {
-            foreach (var item in GPSInfosManager.Insatance.markerList)
+            foreach (var item in GPSInfosManager.Insatance.needUpdateMarkerList)
             {
                 updateMarker(item.lng, item.lat, item.gpsID, item.t);
             }
-            GPSInfosManager.Insatance.markerList.Clear();
+            GPSInfosManager.Insatance.needUpdateMarkerList.Clear();
         }
 
         t += Time.deltaTime;

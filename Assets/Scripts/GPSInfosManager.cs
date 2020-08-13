@@ -7,7 +7,7 @@ public class GPSInfosManager
 {
     private static GPSInfosManager _instance = new GPSInfosManager();
     public Dictionary<int, OnlineMapsMarker> markersDict = new Dictionary<int, OnlineMapsMarker>();
-    public List<MarkerInfo> markerList = new List<MarkerInfo>();
+    public List<MarkerInfo> needUpdateMarkerList = new List<MarkerInfo>();
     public static GPSInfosManager Insatance
     {
         get
@@ -59,7 +59,7 @@ public class GPSInfosManager
 
                     insert2mysql(lng, lat, gpsID, t);
 
-                    markerList.Add(new MarkerInfo(lng,lat,gpsID,t));
+                    needUpdateMarkerList.Add(new MarkerInfo(lng,lat,gpsID,t));
                    
                    
 
@@ -72,9 +72,9 @@ public class GPSInfosManager
 
 public class MarkerInfo
 {
-     public  double lng, lat;
+    public double lng, lat;
     public int gpsID;
-        public string t;
+    public string t;
     public MarkerInfo(double _lng,double _lat,int _gpsID,string _t)
     {
         lng = _lng;

@@ -1,5 +1,6 @@
 {
   "MysqlConf": "Database=qingdaoport;Data Source = 127.0.0.1; User Id = root; Password=123456;port=3306",
+  "TcpClientConf": "192.168.10.225:5612",
   "UdpServer": "192.168.10.225:5611",
-  "MapHttpServer": "http://127.0.0.1:8000/roadmap/{zoom}{x}{y}"
+  "MapHttpServer": "http://192.168.10.225:8000/roadmap/{zoom}{x}{y}"
 }

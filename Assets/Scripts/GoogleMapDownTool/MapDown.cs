@@ -194,6 +194,7 @@ public class MapDown : MonoBehaviour
         yield return StartCoroutine(autoRetry());
         yield return new WaitForSeconds(1);
         text_log.text = text_log.text + "\n任务完成\n"+System.DateTime.Now.ToString();
+        StopAllCoroutines();
     }
   
 

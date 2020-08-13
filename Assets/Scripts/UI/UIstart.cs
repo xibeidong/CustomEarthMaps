@@ -136,6 +136,7 @@ public class UIstart : MonoBehaviour
 
     private void OnClickClear()
     {
+        Application.targetFrameRate = 15;//降低FPS，CPU
         PlayBack pb = gameObject.GetComponent<PlayBack>();
         if (pb!=null)
         {
@@ -158,14 +159,76 @@ public class UIstart : MonoBehaviour
     }
     private void OnClickCanel()
     {
+       // double[] xy = wgs2gcj(36.0266590118408, 120.190665721893);
+        //OnlineMapsMarkerManager.CreateItem(xy[0],xy[1],"123");
+
         CanvasGroup c = canvasGroup;
         c.alpha = 0;
         c.interactable = false;
         c.blocksRaycasts = false;
     }
+    /**
+	 * 
+	 * @Title: wgs2gcj 
+	 * @Description: 84  to  火星坐标系  (GCJ-02)  World  Geodetic  System  ==>  Mars  Geodetic  System 
+	 * @param lat
+	 * @param lon
+	 * @return
+	 */
+    static double pi = 3.14159265358979324;
+    static double a = 6378245.0;
+    static double ee = 0.00669342162296594323;
+    public static double[] wgs2gcj(double lat, double lon)
+    {
+        double dLat = transformLat(lon - 105.0, lat - 35.0);
+        double dLon = transformLon(lon - 105.0, lat - 35.0);
+        double radLat = lat / 180.0 * pi;
+        double magic = Math.Sin(radLat);
+        magic = 1 - ee * magic * magic;
+        double sqrtMagic = Math.Sqrt(magic);
+        dLat = (dLat * 180.0) / ((a * (1 - ee)) / (magic * sqrtMagic) * pi);
+        dLon = (dLon * 180.0) / (a / sqrtMagic * Math.Cos(radLat) * pi);
+        double mgLat = lat + dLat;
+        double mgLon = lon + dLon;
+        double[] loc = { mgLat, mgLon };
+        return loc;
+    }
 
+    private static double transformLat(double lat, double lon)
+    {
+        double ret = -100.0 + 2.0 * lat + 3.0 * lon + 0.2 * lon * lon + 0.1 * lat * lon + 0.2 * Math.Sqrt(Math.Abs(lat));
+        ret += (20.0 * Math.Sin(6.0 * lat * pi) + 20.0 * Math.Sin(2.0 * lat * pi)) * 2.0 / 3.0;
+        ret += (20.0 * Math.Sin(lon * pi) + 40.0 * Math.Sin(lon / 3.0 * pi)) * 2.0 / 3.0;
+        ret += (160.0 * Math.Sin(lon / 12.0 * pi) + 320 * Math.Sin(lon * pi / 30.0)) * 2.0 / 3.0;
+        return ret;
+    }
+
+    private static double transformLon(double lat, double lon)
+    {
+        double ret = 300.0 + lat + 2.0 * lon + 0.1 * lat * lat + 0.1 * lat * lon + 0.1 * Math.Sqrt(Math.Abs(lat));
+        ret += (20.0 * Math.Sin(6.0 * lat * pi) + 20.0 * Math.Sin(2.0 * lat * pi)) * 2.0 / 3.0;
+        ret += (20.0 * Math.Sin(lat * pi) + 40.0 * Math.Sin(lat / 3.0 * pi)) * 2.0 / 3.0;
+        ret += (150.0 * Math.Sin(lat / 12.0 * pi) + 300.0 * Math.Sin(lat / 30.0 * pi)) * 2.0 / 3.0;
+        return ret;
+    }
     private void OnclickPlay()
     {
+
+      //  List<OnlineMapsVector2d> route = new List<OnlineMapsVector2d>();
+        // ArrayList markerRouteList = new ArrayList();
+        string gpsID = input_id.text;
+        string time_start = input_start_time.text;
+        string time_end = input_end_time.text;
+      
+        //MyTcpClient client
+        
+
+        
+
+    }
+    private void OnclickPlay_bak()
+    {
+        
         List<OnlineMapsVector2d> route = new List<OnlineMapsVector2d>();
        // ArrayList markerRouteList = new ArrayList();
         string gpsID = input_id.text;
@@ -186,7 +249,9 @@ public class UIstart : MonoBehaviour
 
         if (route.Count>1)
         {
+
             PlayBack pb = gameObject.GetComponent<PlayBack>();
+            Application.targetFrameRate = 70;//FPS调大，使动画流畅
             pb.CreatOneRoute(new PlayBackExecutor(route,gpsID + " 轨迹"));
 
             OnClickCanel();
