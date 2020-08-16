@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class UIstart : MonoBehaviour
 {
-    
+    public Action ClosePlayBackPannelAction;
     // Start is called before the first frame update
     
     private Button btn_full = null;
@@ -23,6 +23,7 @@ public class UIstart : MonoBehaviour
     private Dropdown map_choose = null;
     void Start()
     {
+        ClosePlayBackPannelAction = new Action(OnClickPlayBackPanelCanelBtn);
         //隐藏 panel_playback
         // GameObject g = GameObject.Find("Panel_playback");
         GameObject g = InitalPrefabs("Prefabs/Panel_playback");
@@ -51,13 +52,13 @@ public class UIstart : MonoBehaviour
         btn_full.onClick.AddListener(OnClickFull);
 
         btn_playback = GameObject.Find("btn_playback").GetComponent<Button>();
-        btn_playback.onClick.AddListener(OnClickPlayback);
+        btn_playback.onClick.AddListener(OnClickMainMenuPlaybackBtn);
 
         btn_canel = GameObject.Find("btn_cancel").GetComponent<Button>();
-        btn_canel.onClick.AddListener(OnClickCanel);
+        btn_canel.onClick.AddListener(OnClickPlayBackPanelCanelBtn);
 
         btn_play = GameObject.Find("btn_play").GetComponent<Button>();
-        btn_play.onClick.AddListener(OnclickPlay);
+        btn_play.onClick.AddListener(OnclickPlayBackPanelPlayBtn);
 
         btn_clear = GameObject.Find("btn_clear").GetComponent<Button>();
         btn_clear.onClick.AddListener(OnClickClear);
@@ -146,7 +147,7 @@ public class UIstart : MonoBehaviour
         
     }
 
-    private void OnClickPlayback()
+    private void OnClickMainMenuPlaybackBtn()
     {
         //OnlineMapsMarker m = OnlineMapsMarkerManager.CreateItem(120.254126, 36.023108, "123 2020/7/25 14:46:32");
         Debug.Log("点击了 路径回访按钮");
@@ -157,7 +158,7 @@ public class UIstart : MonoBehaviour
 
         GameObject.Find("Text_Message").GetComponent<Text>().text = "";
     }
-    private void OnClickCanel()
+    private void OnClickPlayBackPanelCanelBtn()
     {
        // double[] xy = wgs2gcj(36.0266590118408, 120.190665721893);
         //OnlineMapsMarkerManager.CreateItem(xy[0],xy[1],"123");
@@ -211,7 +212,7 @@ public class UIstart : MonoBehaviour
         ret += (150.0 * Math.Sin(lat / 12.0 * pi) + 300.0 * Math.Sin(lat / 30.0 * pi)) * 2.0 / 3.0;
         return ret;
     }
-    private void OnclickPlay()
+    private void OnclickPlayBackPanelPlayBtn()
     {
 
       //  List<OnlineMapsVector2d> route = new List<OnlineMapsVector2d>();
@@ -219,7 +220,26 @@ public class UIstart : MonoBehaviour
         string gpsID = input_id.text;
         string time_start = input_start_time.text;
         string time_end = input_end_time.text;
-      
+
+        PlayBackPositions pbs = new PlayBackPositions();
+        pbs.GpsId = int.Parse( gpsID);
+        //服务器识别的格式是 "2006-01-02 15:04:05" ; 不是"2006/1/12 15:04:05"
+        pbs.TBegin = Convert.ToDateTime(time_start).ToString("yyyy-MM-dd HH:mm:ss");
+        pbs.TEnd = Convert.ToDateTime(time_end).ToString("yyyy-MM-dd HH:mm:ss");
+
+        string jsonStr = JsonUtility.ToJson(pbs);
+
+        MyTcpClient tcp = gameObject.GetComponent<MyTcpClient>();
+        if (tcp!=null)
+        {
+            tcp.SendToTcpServer(103, System.Text.Encoding.UTF8.GetBytes(jsonStr));
+        }
+        else
+        {
+            Debug.Log("无法获取组件： MyTcpClient");
+        }
+
+
         //MyTcpClient client
         
 
@@ -254,7 +274,7 @@ public class UIstart : MonoBehaviour
             Application.targetFrameRate = 70;//FPS调大，使动画流畅
             pb.CreatOneRoute(new PlayBackExecutor(route,gpsID + " 轨迹"));
 
-            OnClickCanel();
+            OnClickPlayBackPanelCanelBtn();
         }
         else
         {

@@ -193,7 +193,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 6.28e-43, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0.12890625, y: 0.0390625, z: 0.03515625, w: -0.0390625}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -444,7 +444,7 @@ PrefabInstance:
     - target: {fileID: 782116949724067619, guid: 9a10dbfe8374e5c40a0f19abdac587ec,
         type: 3}
       propertyPath: _items.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 782116949724067619, guid: 9a10dbfe8374e5c40a0f19abdac587ec,
         type: 3}
@@ -708,6 +708,7 @@ GameObject:
   - component: {fileID: 1944058776}
   - component: {fileID: 1944058780}
   - component: {fileID: 1944058781}
+  - component: {fileID: 1944058782}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -818,6 +819,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4675b64414541214e8bacac4e9afc853, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1944058782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944058775}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 041535d6754c6a7419581479989c5ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2088570192
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,7 +842,6 @@ GameObject:
   - component: {fileID: 2088570194}
   - component: {fileID: 2088570200}
   - component: {fileID: 2088570195}
-  - component: {fileID: 2088570196}
   - component: {fileID: 2088570193}
   m_Layer: 0
   m_Name: start
@@ -881,18 +893,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fpsTarget: 15
   updateInterval: 1
---- !u!114 &2088570196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2088570192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 041535d6754c6a7419581479989c5ae4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2088570200
 MonoBehaviour:
   m_ObjectHideFlags: 0

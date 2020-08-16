@@ -1,19 +1,74 @@
-﻿using System.Collections;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayBack : MonoBehaviour
 {
+   
     private List<PlayBackExecutor> executorList = new List<PlayBackExecutor>();
     private bool needReDraw = false;
-   
+   // Text infoText;
+    private void Start()
+    {
+       
+       
+    }
+    public void DoPlayBack(MyObjectState state)
+    {
+        Debug.Log("bodyData 开始转 string");
+        string jsonStr = Encoding.UTF8.GetString(state.bodyData);
+        Debug.Log(jsonStr);
 
+        PlayBackPositions pbs = JsonConvert.DeserializeObject<PlayBackPositions>(jsonStr);
+
+        Debug.Log("json 反序列化完成，得到实例");
+
+        List<OnlineMapsVector2d> route = new List<OnlineMapsVector2d>();
+
+        //Debug.Log("定位点数量："+pbs.Positions.Length);
+        if (pbs.Positions!=null)
+        {
+            for (int i = 0; i < pbs.Positions.Length; i++)
+            {
+
+                Vector2 v = new Vector2((float)pbs.Positions[i].Lng, (float)pbs.Positions[i].Lat);
+                route.Add(v);
+            }
+        }
+      
+
+        if (route.Count > 1)
+        {
+
+            Application.targetFrameRate = 60;//FPS调大，使动画流畅
+            CreatOneRoute(new PlayBackExecutor(route, pbs.GpsId + " 轨迹"));
+
+            UIstart u = gameObject.GetComponent<UIstart>();
+            u.ClosePlayBackPannelAction(); //关闭路径回放UIPannel
+        }
+        else
+        {
+            GameObject go = GameObject.Find("Text_Message");
+            if (go != null)
+            {
+                Text infoText = go.GetComponent<Text>();
+                infoText.text = "坐标太少（小于2），无法生成路径";
+
+            }
+           
+           
+        }
+    }
     public void CreatOneRoute(PlayBackExecutor exetor)
     {
         executorList.Add(exetor);
        
     }
-
+    
     public void Clear()
     {
         // OnlineMapsMarkerManager.instance.Remove(marker);

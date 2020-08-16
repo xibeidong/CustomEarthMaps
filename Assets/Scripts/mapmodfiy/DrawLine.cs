@@ -9,7 +9,7 @@ public class DrawLine : MonoBehaviour
 
     // private OnlineMapsVector2d[] points;
     private List<OnlineMapsVector2d> points = new List<OnlineMapsVector2d>();
-    private int pointIndex = 0;
+    //private int pointIndex = 0;
     private double progress;
     private void Start()
     {
