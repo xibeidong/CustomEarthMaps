@@ -19,8 +19,8 @@ public class FPS : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        OnlineMaps.instance.zoomRange = new OnlineMapsRange(11, 17);
-        //OnlineMaps.instance.positionRange = new OnlineMapsPositionRange();
+        OnlineMaps.instance.zoomRange = new OnlineMapsRange(10, 18);
+        OnlineMaps.instance.positionRange = new OnlineMapsPositionRange(35.505408770431f,119.66170433021f, 36.138976000377f, 120.4307656071f);
     }
 
     // Update is called once per frame

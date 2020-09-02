@@ -73,9 +73,19 @@ public class MyTcpClient : MonoBehaviour
         MyObjectState state = (MyObjectState)ar.AsyncState;
         int len = stream.EndRead(ar);
         state.messageId = BitConverter.ToInt16(state.headData, 0);
+        Debug.Log("messageId = " + state.messageId);
+        //消息头不对，重新接收
+        if (state.messageId>103 || state.messageId<97 || state.messageId%2 == 0)
+        {
+            Debug.Log("放弃本消息");
+            state = null;
+            readHeadFromTcpServer();
+            return;
+        }
+
         state.bodyLen = BitConverter.ToInt32(state.headData, 2);
 
-        Debug.Log("messageId = " + state.messageId);
+       
         Debug.Log(BitConverter.ToString(state.headData));
         Debug.Log("bodyLen = " + state.bodyLen + " 即将接收bodyData");
         if (ar.IsCompleted)
@@ -86,8 +96,18 @@ public class MyTcpClient : MonoBehaviour
 
     void readBodyFromTcpServer(MyObjectState state)
     {
-        state.bodyData = new byte[state.bodyLen];
-        stream.BeginRead(state.bodyData, 0, state.bodyLen, new AsyncCallback(asyncReadBodyCallBack), state);
+        if (state.bodyData == null)
+        {
+           // Debug.Log("初始化 bodyData");
+            state.bodyData = new byte[state.bodyLen];
+        }
+        int recvLen = 1024;
+        if (state.bodyLen-state.hasRecvLen<1024)
+        {
+            recvLen = state.bodyLen - state.hasRecvLen;
+        }
+        //每次最大接收1024
+        stream.BeginRead(state.bodyData, state.hasRecvLen, recvLen, new AsyncCallback(asyncReadBodyCallBack), state);
     }
     void asyncReadBodyCallBack(IAsyncResult ar)
     {
@@ -95,14 +115,24 @@ public class MyTcpClient : MonoBehaviour
         MyObjectState state = (MyObjectState)ar.AsyncState;
         if (ar.IsCompleted)
         {
-            readHeadFromTcpServer();
+            state.hasRecvLen += len;
+           // Debug.Log("hasRecvLen = " + state.hasRecvLen);
+            if (state.bodyLen == state.hasRecvLen ) //接收完了，进入下一个等待
+            {
+                readHeadFromTcpServer();
+            }
+            else if(state.bodyLen>state.hasRecvLen) //没有接收完，继续接收body
+            {
+               // Debug.Log("继续接收。。。");
+                readBodyFromTcpServer(state);
+                return;
+            }
         }
 
         //todo
         Debug.Log("dataBody 接收完毕，开始解析");
 
-        // ResolveBodyData(state);
-        needResolveMessageQueue.Enqueue(state);
+        needResolveMessageQueue.Enqueue(state); //放到主线程去 处理接收的完整包
        
     }
     void sendToTcpServer(byte[] data)
@@ -207,6 +237,7 @@ public class MyObjectState
 {
     public int messageId; //uint16
     public int bodyLen;
+    public int hasRecvLen;
     public byte[] headData; //bodyData的长度，int32
     public byte[] bodyData; //json序列化后的bytes
 }

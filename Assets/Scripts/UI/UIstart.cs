@@ -43,6 +43,7 @@ public class UIstart : MonoBehaviour
        
         map_choose = GameObject.Find("Dropdown_MapChoose").GetComponent<Dropdown>();
         map_choose.onValueChanged.AddListener(mapChooseValueChange);
+        map_choose.gameObject.SetActive(false);//隐藏按钮，当前不需要
 
         int v = PlayerPrefs.GetInt("mapType");
         map_choose.value = v;
@@ -77,7 +78,8 @@ public class UIstart : MonoBehaviour
     {
         GameObject prefab = Resources.Load(path) as GameObject;
         GameObject g = GameObject.Instantiate<GameObject>(prefab);
-        g.transform.parent = transform;
+        //g.transform.parent = transform;
+        g.transform.SetParent(transform);
         g.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
         return g;
     }

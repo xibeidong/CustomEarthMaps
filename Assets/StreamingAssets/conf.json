@@ -1,6 +1,6 @@
 {
   "MysqlConf": "Database=qingdaoport;Data Source = 127.0.0.1; User Id = root; Password=123456;port=3306",
-  "TcpClientConf": "127.0.0.1:5612",
-  "UdpServer": "127.0.0.1:5611",
-  "MapHttpServer": "http://192.168.10.225:8000/roadmap/{zoom}{x}{y}"
+  "TcpClientConf": "192.168.10.225:5612",
+  "UdpServer": "192.168.10.225:5611",
+  "MapHttpServer": "http://192.168.10.225:8000/sqlite_roadmap/{zoom}{x}{y}"
 }
